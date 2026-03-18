@@ -1,0 +1,3 @@
+globalThis.window.onload = () => {
+  
+}
