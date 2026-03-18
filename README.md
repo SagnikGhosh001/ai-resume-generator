@@ -1,89 +1,72 @@
 # 🤖 AI Resume Generator (GitHub-Based)
 
-An AI-powered resume generator that builds professional resumes using data from
-a GitHub profile.
+Generate professional, ATS-friendly resumes instantly using your GitHub profile.
+
+This project analyzes your repositories, languages, and contributions, then uses
+AI to create a clean, structured resume — ready to download.
 
 ---
 
 ## 🚀 Features
 
 - 🔍 Fetch GitHub user data
-- 🧠 Extract top programming languages
-- 📦 Analyze repositories and projects
-- ⭐ Calculate total stars, forks, and contributions
-- 📝 Generate AI-based resume summaries
-- 📄 Export resume (PDF / Markdown / JSON)
+- 🧠 Analyze top programming languages
+- 📦 Extract project insights from repositories
+- ⭐ Calculate stars, forks, and activity
+- 📝 Generate AI-powered resume summaries
+- 📄 Download resume (Markdown, extendable to PDF)
+- ⚡ Fast and lightweight backend (Deno + Hono)
 
 ---
 
 ## 🛠️ Tech Stack
 
-- Backend: Node.js / Python
-- APIs: GitHub REST API + GraphQL API
-- AI: OpenAI / LLM
-- Frontend: React (optional)
+### Backend
+
+- 🦕 Deno
+- 🔥 Hono
+
+### AI
+
+- 🤖 OpenRouter SDK
+
+### APIs
+
+- 📡 GitHub REST API
+
+### Frontend
+
+- 🌐 Vanilla JavaScript
 
 ---
 
-## 📡 GitHub API Endpoints Used
+## 📂 Project Structure
 
-### 👤 User Profile
-
-https://api.github.com/users/{username}
-
----
-
-### 📦 Repositories
-
-https://api.github.com/users/{username}/repos?per_page=100&type=owner&sort=updated
-
----
-
-### 🧠 Languages (per repo)
-
-https://api.github.com/repos/{username}/{repo}/languages
-
----
-
-### ⭐ Starred Repositories
-
-https://api.github.com/users/{username}/starred
-
----
-
-### 🔥 User Activity (Events)
-
-https://api.github.com/users/{username}/events
-
----
-
-### 📊 Commits (per repo)
-
-https://api.github.com/repos/{username}/{repo}/commits
-
----
-
-### 🔀 Pull Requests (Search API)
-
-https://api.github.com/search/issues?q=author:{username}+type:pr
-
----
-
-### 🐛 Issues Created
-
-https://api.github.com/search/issues?q=author:{username}+type:issue
-
----
-
-### 🏢 Organizations
-
-https://api.github.com/users/{username}/orgs
-
----
-
-### 👥 Followers
-
-https://api.github.com/users/{username}/followers
+```id="xv7c4x"
+.
+├── main.js              # Entry point
+├── deno.json            # Deno config
+├── src/
+│   ├── app.js           # Hono app setup
+│   ├── handler.js       # Route handlers (download logic)
+│   └── open-router/
+│       ├── open_router.js     # OpenRouter client setup
+│       ├── agent/
+│       │   └── tool_runner.js # Agent loop (LLM + tools)
+│       └── tools/
+│           ├── github.js      # GitHub API functions
+│           └── index.js       # Tool definitions
+│
+├── public/              # Frontend
+│   ├── index.html
+│   ├── scripts/
+│   │   └── main.js
+│   └── styles/
+│       └── style.css
+│
+├── hooks/               # Git hooks (pre-commit)
+└── setup/               # Setup scripts (optional)
+```
 
 ---
 
@@ -91,79 +74,95 @@ https://api.github.com/users/{username}/followers
 
 ### 1. Clone the repository
 
-```bash
+```
 git clone https://github.com/sagnikghosh001/ai-resume-generator.git
 cd ai-resume-generator
 ```
 
 ---
 
-### 2. Install dependencies
+### 2. Run the project
 
-```bash
-npm install
-# or
-pip install -r requirements.txt
+```
+deno task dev
 ```
 
 ---
 
-### 3. Add GitHub Token (Recommended)
+### 3. Environment Variables
 
 Create a `.env` file:
 
-```
-GITHUB_TOKEN=your_personal_access_token
-```
-
----
-
-### 4. Run the project
-
-```bash
-npm start
-# or
-python app.py
+```id="4k5jxn"
+OPEN_ROUTER_API_KEY=your_api_key
 ```
 
 ---
 
-## ⚠️ Rate Limits
+## 🌐 Usage
 
-- Unauthenticated: 60 requests/hour
-- Authenticated: 5000 requests/hour
-
-Use a token to avoid hitting limits.
+1. Open `http://localhost:8000`
+2. Enter your GitHub username
+3. Click **Download Resume**
+4. Resume is generated and downloaded automatically
 
 ---
 
 ## 🧠 How It Works
 
-1. Fetch user profile data
-2. Fetch repositories
-3. Aggregate languages across repos
-4. Calculate stats (stars, forks, commits)
-5. Use AI to generate resume content
-6. Export formatted resume
+1. Frontend sends username via form
+2. Backend (Hono) receives request
+3. GitHub data is fetched using tools
+4. Agent (`tool_runner`) orchestrates LLM + tools
+5. Resume is generated using AI
+6. File is returned with download headers
 
 ---
 
-## 📌 Future Improvements
+## ⚠️ Rate Limits
 
-- 📄 Resume templates
-- 🌐 Portfolio website generator
+### GitHub API
+
+- 60 requests/hour (unauthenticated)
+- 5000 requests/hour (with token)
+
+### OpenRouter
+
+- Free tier has strict daily limits
+- Multiple agent steps = multiple API calls
+
+👉 Optimize by minimizing LLM calls
+
+---
+
+## 🔮 Future Improvements
+
+- 📄 PDF export with styling
+- 🎨 Resume templates
+- 🌐 Portfolio generator
 - 🔗 LinkedIn integration
-- 📊 Contribution graphs
-- 🤖 Better AI summarization
+- ⚡ Caching GitHub data
+- 🧠 Single-call AI optimization (reduce cost)
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests are welcome! Feel free to open issues for suggestions or bugs.
+Contributions are welcome!
+
+1. Fork the repo
+2. Create a branch
+3. Submit a pull request
 
 ---
 
-## 📜 License
+## 💡 Note
 
-MIT License
+This project uses an **agent-based architecture**, combining:
+
+- Tool calling (GitHub APIs)
+- LLM reasoning (OpenRouter)
+
+For production use, consider reducing multiple LLM calls to avoid rate limits.
+
+---
