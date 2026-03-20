@@ -19,6 +19,9 @@ Output in markdown format.
 export const downlaodResume = async (c) => {
   const formData = await c.req.formData();
   const username = formData.get("username");
+  if (!username) {
+    return c.text("Provide Your Username", 400);
+  }
   const messages = createInitialMessages(username);
   const resume = await runAgent(messages, tools);
   return new Response(resume, {

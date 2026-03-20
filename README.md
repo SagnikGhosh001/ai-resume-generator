@@ -42,7 +42,7 @@ AI to create a clean, structured resume — ready to download.
 
 ## 📂 Project Structure
 
-```id="xv7c4x"
+```
 .
 ├── main.js              # Entry point
 ├── deno.json            # Deno config
@@ -93,8 +93,9 @@ deno task dev
 
 Create a `.env` file:
 
-```id="4k5jxn"
+```
 OPEN_ROUTER_API_KEY=your_api_key
+GITHUB_TOKEN=your_github_token
 ```
 
 ---
