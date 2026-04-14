@@ -1,169 +1,183 @@
-# 🤖 AI Resume Generator (GitHub-Based)
+# AI Resume Generator
 
-Generate professional, ATS-friendly resumes instantly using your GitHub profile.
+Generate professional, ATS-friendly resumes from your GitHub profile using an AI agent.
 
-This project analyzes your repositories, languages, and contributions, then uses
-AI to create a clean, structured resume — ready to download.
-
----
-
-## 🚀 Features
-
-- 🔍 Fetch GitHub user data
-- 🧠 Analyze top programming languages
-- 📦 Extract project insights from repositories
-- ⭐ Calculate stars, forks, and activity
-- 📝 Generate AI-powered resume summaries
-- 📄 Download resume (Markdown, extendable to PDF)
-- ⚡ Fast and lightweight backend (Deno + Hono)
+The app fetches your repositories, languages, and contribution stats via GitHub tools, passes them to an LLM (via OpenRouter), and produces a structured resume. You can review and edit the result in the browser before downloading as PDF.
 
 ---
 
-## 🛠️ Tech Stack
+## Features
 
-### Backend
-
-- 🦕 Deno
-- 🔥 Hono
-
-### AI
-
-- 🤖 OpenRouter SDK
-
-### APIs
-
-- 📡 GitHub REST API
-
-### Frontend
-
-- 🌐 Vanilla JavaScript
+- Fetches real GitHub data — profile, repos, languages, stats
+- AI agent orchestrates tool calls before generating the resume
+- Resume preview page with inline editing (click any field to edit)
+- Download as PDF (server-side, via PDFKit)
+- Accepts user-supplied data — phone, email, LinkedIn, work experience, education — which always takes priority over inferred data
+- Fast, lightweight backend (Deno + Hono)
 
 ---
 
-## 📂 Project Structure
+## Tech Stack
+
+| Layer     | Technology                        |
+|-----------|-----------------------------------|
+| Runtime   | Deno                              |
+| Backend   | Hono                              |
+| AI        | OpenRouter SDK (free LLM tier)    |
+| PDF       | PDFKit                            |
+| APIs      | GitHub REST API                   |
+| Frontend  | Vanilla JS (ES modules)           |
+
+---
+
+## Project Structure
 
 ```
 .
-├── main.js              # Entry point
-├── deno.json            # Deno config
+├── main.js                        # Entry point
+├── deno.json                      # Deno config + dependencies
+│
+├── data/
+│   └── resume.json                # JSON schema defining resume shape
+│
 ├── src/
-│   ├── app.js           # Hono app setup
-│   ├── handler.js       # Route handlers (download logic)
+│   ├── app.js                     # Hono app + route definitions
+│   ├── handler.js                 # POST /generate — runs agent, returns JSON
+│   │
+│   ├── resume/
+│   │   ├── messages.js            # System prompt + initial message builder
+│   │   ├── context.js             # Formats user-provided data for the prompt
+│   │   ├── form_parser.js         # Parses multipart form → userInfo object
+│   │   └── parser.js              # Strips markdown fences, parses AI JSON output
+│   │
+│   ├── download/
+│   │   └── pdf.js                 # POST /download/pdf — PDFKit resume builder
+│   │
 │   └── open-router/
-│       ├── open_router.js     # OpenRouter client setup
+│       ├── open_router.js         # OpenRouter client
 │       ├── agent/
-│       │   └── tool_runner.js # Agent loop (LLM + tools)
+│       │   └── tool_runner.js     # Agent loop — LLM + tool execution
 │       └── tools/
-│           ├── github.js      # GitHub API functions
-│           └── index.js       # Tool definitions
+│           ├── github.js          # GitHub API functions
+│           └── index.js           # Tool definitions (function calling schema)
 │
-├── public/              # Frontend
-│   ├── index.html
-│   ├── scripts/
-│   │   └── main.js
-│   └── styles/
-│       └── style.css
-│
-├── hooks/               # Git hooks (pre-commit)
-└── setup/               # Setup scripts (optional)
+└── public/                        # Static frontend (served by Hono)
+    ├── index.html                 # Input form
+    ├── resume.html                # Resume preview + edit + download
+    │
+    ├── scripts/
+    │   ├── main.js                # Form page init
+    │   ├── submit.js              # POST /generate, redirect to /resume
+    │   ├── entries/
+    │   │   ├── work.js            # Work experience entry (create + collect)
+    │   │   └── education.js       # Education entry (create + collect)
+    │   └── resume/
+    │       ├── main.js            # Resume page init
+    │       ├── renderer.js        # Renders JSON sections as editable DOM
+    │       ├── collector.js       # Reads edited DOM back into JSON
+    │       └── downloader.js      # POST /download/pdf + trigger download
+    │
+    └── styles/
+        ├── style.css              # Input form styles
+        └── resume.css             # Resume preview styles
 ```
 
 ---
 
-## ⚙️ Setup
+## Setup
 
 ### 1. Clone the repository
 
-```
+```bash
 git clone https://github.com/sagnikghosh001/ai-resume-generator.git
 cd ai-resume-generator
 ```
 
----
+### 2. Set environment variables
 
-### 2. Run the project
+Create a `.env` file in the project root:
 
-```
-deno task dev
-```
-
----
-
-### 3. Environment Variables
-
-Create a `.env` file:
-
-```
-OPEN_ROUTER_API_KEY=your_api_key
+```env
+OPEN_ROUTER_API_KEY=your_openrouter_api_key
 GITHUB_TOKEN=your_github_token
 ```
 
+`GITHUB_TOKEN` is optional but increases the GitHub API rate limit from 60 to 5000 requests/hour.
+
+### 3. Run
+
+```bash
+deno task dev
+```
+
+Server starts at `http://localhost:8000`.
+
 ---
 
-## 🌐 Usage
+## Usage
 
 1. Open `http://localhost:8000`
 2. Enter your GitHub username
-3. Click **Download Resume**
-4. Resume is generated and downloaded automatically
+3. Optionally fill in contact info, work experience, and education
+4. Click **Download Resume**
+5. Wait while the AI agent fetches your GitHub data and generates the resume
+6. You are redirected to the resume preview page
+7. Click any field to edit it inline
+8. Click **Download PDF** to get the final PDF
 
 ---
 
-## 🧠 How It Works
+## How It Works
 
-1. Frontend sends username via form
-2. Backend (Hono) receives request
-3. GitHub data is fetched using tools
-4. Agent (`tool_runner`) orchestrates LLM + tools
-5. Resume is generated using AI
-6. File is returned with download headers
+```
+Form submit
+  → POST /generate
+    → Agent loop (tool_runner.js)
+        Phase 1: call GitHub tools
+          get_user_profile → get_repositories → get_stats → get_languages
+        Phase 2: LLM generates filled resume JSON
+  → JSON returned to browser
+  → Stored in sessionStorage, redirect to /resume
+
+/resume page
+  → Renders JSON as editable HTML (renderer.js)
+  → User edits fields inline
+  → Click Download PDF
+      → collectResume() reads edited DOM back to JSON
+      → POST /download/pdf
+          → PDFKit builds PDF server-side
+      → PDF downloaded
+```
 
 ---
 
-## ⚠️ Rate Limits
+## API Endpoints
+
+| Method | Path            | Description                                      |
+|--------|-----------------|--------------------------------------------------|
+| POST   | `/generate`     | Accepts form data, returns resume JSON           |
+| POST   | `/download/pdf` | Accepts `{ resume }` JSON body, returns PDF file |
+| GET    | `/resume`       | Serves the resume preview page                   |
+| GET    | `*`             | Serves static files from `public/`               |
+
+---
+
+## Rate Limits
 
 ### GitHub API
+- 60 requests/hour without a token
+- 5000 requests/hour with `GITHUB_TOKEN`
 
-- 60 requests/hour (unauthenticated)
-- 5000 requests/hour (with token)
-
-### OpenRouter
-
-- Free tier has strict daily limits
-- Multiple agent steps = multiple API calls
-
-👉 Optimize by minimizing LLM calls
+### OpenRouter (free tier)
+- Each resume generation makes several API calls (one per tool call + one final call)
+- Free models have daily/per-minute request limits
 
 ---
 
-## 🔮 Future Improvements
+## Planned Improvements
 
-- 📄 PDF export with styling
-- 🎨 Resume templates
-- 🌐 Portfolio generator
-- 🔗 LinkedIn integration
-- ⚡ Caching GitHub data
-- 🧠 Single-call AI optimization (reduce cost)
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome!
-
-1. Fork the repo
-2. Create a branch
-3. Submit a pull request
-
----
-
-## 💡 Note
-
-This project uses an **agent-based architecture**, combining:
-
-- Tool calling (GitHub APIs)
-- LLM reasoning (OpenRouter)
-
-For production use, consider reducing multiple LLM calls to avoid rate limits.
-
----
+- Resume templates / themes
+- Additional download formats (DOCX, Markdown)
+- LinkedIn profile integration
+- GitHub data caching to reduce API calls
+- Multi-language resume support
