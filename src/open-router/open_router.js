@@ -7,7 +7,7 @@ const openRouter = new OpenRouter({
 export const callOpenRouter = async (messages, tools) => {
   const res = await openRouter.chat.send({
     chatGenerationParams: {
-      model: "stepfun/step-3.5-flash:free",
+      model: "openrouter/elephant-alpha",
       messages,
       tools,
       stream: false,

@@ -1,26 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/style.css">
+    <script type="module" src="scripts/main.js"></script>
+    <title>Resume Generator</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles/style.css">
-  <script type="module" src="scripts/main.js"></script>
-  <title>Home</title>
-</head>
+  <body>
+    <header>
+      <h1>Resume Generator</h1>
+    </header>
 
-<body>
-  <header>
-    <h1>Resume Generator</h1>
-  </header>
+    <template id="tpl-work-entry">
+      <div class="entry">
+        <div class="entry-header">
+          <span class="entry-label"></span>
+          <button type="button" class="remove-btn">Remove</button>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Company Name</label>
+            <input type="text" class="we-company" placeholder="Google">
+          </div>
+          <div class="field">
+            <label>Job Title</label>
+            <input type="text" class="we-title" placeholder="Software Engineer">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Employment Type</label>
+            <select class="we-type">
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Internship">Internship</option>
+              <option value="Freelance">Freelance</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Start Date</label>
+            <input type="month" class="we-start">
+          </div>
+          <div class="field end-date-field">
+            <label>End Date</label>
+            <input type="month" class="we-end">
+          </div>
+        </div>
+        <div class="field checkbox-field">
+          <label><input type="checkbox" class="we-current"> Currently working
+            here</label>
+        </div>
+        <div class="field">
+          <label>Responsibilities / Description</label>
+          <textarea
+            class="we-desc"
+            rows="3"
+            placeholder="Key responsibilities, achievements..."
+          ></textarea>
+        </div>
+      </div>
+    </template>
 
-  <main>
-    <form>
-      <label for="username">Username</label>
-      <input type="text" name="username" id="username" placeholder="Enter your GitHub Username" required>
-      <button type="submit" id="download-btn">Download</button>
-    </form>
-  </main>
-</body>
+    <template id="tpl-education-entry">
+      <div class="entry">
+        <div class="entry-header">
+          <span class="entry-label"></span>
+          <button type="button" class="remove-btn">Remove</button>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Institution</label>
+            <input type="text" class="ed-institution" placeholder="MIT">
+          </div>
+          <div class="field">
+            <label>Education Level</label>
+            <select class="ed-level">
+              <option value="Bachelor">Bachelor</option>
+              <option value="Master">Master</option>
+              <option value="PhD">PhD</option>
+              <option value="Diploma">Diploma</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Degree</label>
+            <input
+              type="text"
+              class="ed-degree"
+              placeholder="B.Sc. Computer Science"
+            >
+          </div>
+          <div class="field">
+            <label>Field of Study</label>
+            <input type="text" class="ed-field" placeholder="Computer Science">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Start Date</label>
+            <input type="month" class="ed-start">
+          </div>
+          <div class="field">
+            <label>End Date</label>
+            <input type="month" class="ed-end">
+          </div>
+        </div>
+      </div>
+    </template>
 
+    <main>
+      <form id="resume-form">
+        <fieldset>
+          <legend>GitHub Profile</legend>
+          <label for="username">GitHub Username</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="e.g. torvalds"
+            required
+          >
+        </fieldset>
+
+        <fieldset>
+          <legend>Contact Info</legend>
+          <div class="field-row">
+            <div class="field">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="you@example.com"
+              >
+            </div>
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input
+                type="tel"
+                name="phone"
+                id="phone"
+                placeholder="+1 234 567 8900"
+              >
+            </div>
+          </div>
+          <div class="field">
+            <label for="linkedin">LinkedIn URL</label>
+            <input
+              type="url"
+              name="linkedin"
+              id="linkedin"
+              placeholder="https://linkedin.com/in/yourname"
+            >
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Work Experience</legend>
+          <div id="work-entries"></div>
+          <button type="button" id="add-work" class="add-btn">
+            + Add Work Experience
+          </button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Education</legend>
+          <div id="education-entries"></div>
+          <button type="button" id="add-education" class="add-btn">
+            + Add Education
+          </button>
+        </fieldset>
+
+        <button type="submit" id="download-btn">Download Resume</button>
+      </form>
+    </main>
+  </body>
 </html>

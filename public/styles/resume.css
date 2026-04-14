@@ -1,0 +1,232 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Georgia", serif;
+}
+
+body {
+  background: #e8e8e8;
+  min-height: 100vh;
+}
+
+/* ── Toolbar ─────────────────────────────────── */
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #1e1b4b;
+  padding: 0.7rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.toolbar-back {
+  color: #c4b5fd;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-family: system-ui, sans-serif;
+}
+
+.toolbar-back:hover {
+  color: #fff;
+}
+
+.toolbar-hint {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: system-ui, sans-serif;
+  flex: 1;
+  text-align: center;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.toolbar-actions button {
+  padding: 0.45rem 1.1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: system-ui, sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  background: #fff;
+  color: #1e1b4b;
+}
+
+.toolbar-actions button:hover {
+  opacity: 0.88;
+}
+
+.toolbar-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Resume wrapper ──────────────────────────── */
+.resume-wrapper {
+  max-width: 860px;
+  margin: 5rem auto 3rem;
+  padding: 0 1rem;
+}
+
+/* ── Resume document (the white paper) ──────── */
+.resume-document {
+  background: #fff;
+  padding: 3rem 3.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  min-height: 297mm;
+}
+
+/* ── Header ──────────────────────────────────── */
+.resume-header {
+  text-align: center;
+  border-bottom: 2px solid #1e1b4b;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.resume-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e1b4b;
+  letter-spacing: 0.5px;
+}
+
+.resume-headline {
+  font-size: 1rem;
+  color: #555;
+  margin-top: 0.2rem;
+  font-style: italic;
+}
+
+.resume-contacts {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.contact-item + .contact-item::before {
+  content: "|";
+  margin-right: 1rem;
+  opacity: 0.4;
+}
+
+/* ── Sections ────────────────────────────────── */
+.resume-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-header {
+  margin-bottom: 0.6rem;
+  border-bottom: 1.5px solid #1e1b4b;
+  padding-bottom: 0.2rem;
+}
+
+.section-title {
+  font-size: 0.85rem;
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #1e1b4b;
+}
+
+/* ── Entry blocks (work, education, projects) ── */
+.entry-block {
+  margin-bottom: 1rem;
+}
+
+.entry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.entry-primary {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #111;
+}
+
+.entry-secondary {
+  font-size: 0.9rem;
+  color: #444;
+  margin-top: 0.1rem;
+  font-style: italic;
+}
+
+.entry-dates {
+  font-size: 0.85rem;
+  color: #666;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.entry-desc {
+  font-size: 0.9rem;
+  color: #333;
+  margin-top: 0.35rem;
+  line-height: 1.6;
+}
+
+.entry-tech {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 0.25rem;
+}
+
+/* ── Skills ──────────────────────────────────── */
+.skill-row {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.skill-category {
+  font-weight: 700;
+  color: #222;
+}
+
+.skill-list {
+  color: #444;
+}
+
+/* ── Summary ─────────────────────────────────── */
+.summary-text {
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* ── Editable fields ─────────────────────────── */
+.editable {
+  display: inline;
+  border-radius: 3px;
+  padding: 0 2px;
+  outline: none;
+  transition: background 0.15s, box-shadow 0.15s;
+  cursor: text;
+}
+
+.editable:hover {
+  background: #f0f0ff;
+  box-shadow: 0 0 0 1px #a5b4fc;
+}
+
+.editable:focus {
+  background: #eef2ff;
+  box-shadow: 0 0 0 2px #6366f1;
+}

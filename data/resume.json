@@ -1,0 +1,302 @@
+{
+  "type": "object",
+  "properties": {
+    "personal_info": {
+      "type": "object",
+      "properties": {
+        "first_name": { "type": "string" },
+        "last_name": { "type": "string" },
+        "full_name": { "type": "string" },
+        "headline": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "alternate_phone": { "type": "string" },
+        "date_of_birth": { "type": "string", "format": "date" },
+        "gender": { "type": "string" },
+        "nationality": { "type": "string" },
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": { "type": "string" },
+            "city": { "type": "string" },
+            "state": { "type": "string" },
+            "country": { "type": "string" },
+            "postal_code": { "type": "string" }
+          }
+        },
+        "location_preference": {
+          "type": "object",
+          "properties": {
+            "remote": { "type": "boolean" },
+            "relocation": { "type": "boolean" },
+            "preferred_locations": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "links": {
+          "type": "object",
+          "properties": {
+            "linkedin": { "type": "string", "format": "uri" },
+            "github": { "type": "string", "format": "uri" },
+            "portfolio": { "type": "string", "format": "uri" },
+            "website": { "type": "string", "format": "uri" },
+            "other": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": { "type": "string" },
+                  "url": { "type": "string", "format": "uri" }
+                }
+              }
+            }
+          }
+        },
+        "photo_url": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "summary": {
+      "type": "object",
+      "properties": {
+        "professional_summary": { "type": "string" },
+        "career_objective": { "type": "string" },
+        "key_highlights": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "skills": {
+      "type": "object",
+      "properties": {
+        "technical_skills": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": { "type": "string" },
+              "skills": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "proficiency": {
+                      "type": "string",
+                      "enum": ["Beginner", "Intermediate", "Advanced", "Expert"]
+                    },
+                    "years_of_experience": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "soft_skills": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tools": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "proficiency": {
+                "type": "string",
+                "enum": ["Basic", "Conversational", "Fluent", "Native"]
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "work_experience": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "company_name": { "type": "string" },
+          "company_url": { "type": "string", "format": "uri" },
+          "industry": { "type": "string" },
+          "job_title": { "type": "string" },
+          "employment_type": {
+            "type": "string",
+            "enum": ["Full-time", "Part-time", "Internship", "Freelance"]
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "city": { "type": "string" },
+              "state": { "type": "string" },
+              "country": { "type": "string" },
+              "remote": { "type": "boolean" }
+            }
+          },
+          "start_date": { "type": "string" },
+          "end_date": {
+            "anyOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ]
+          },
+          "currently_working": { "type": "boolean" },
+          "description": { "type": "string" },
+          "responsibilities": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "achievements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "impact": { "type": "string" },
+                "metrics": {
+                  "type": "object",
+                  "properties": {
+                    "percentage": { "type": "number" },
+                    "value": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "technologies_used": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "education": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "institution_name": { "type": "string" },
+          "institution_url": { "type": "string", "format": "uri" },
+          "degree": { "type": "string" },
+          "field_of_study": { "type": "string" },
+          "education_level": {
+            "type": "string",
+            "enum": ["Bachelor", "Master", "PhD", "Diploma"]
+          },
+          "start_date": { "type": "string" },
+          "end_date": { "type": "string" },
+          "grade": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["CGPA", "Percentage"]
+              },
+              "value": { "type": "string" }
+            }
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "city": { "type": "string" },
+              "country": { "type": "string" }
+            }
+          },
+          "description": { "type": "string" },
+          "achievements": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "role": { "type": "string" },
+          "technologies": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "start_date": { "type": "string" },
+          "end_date": { "type": "string" },
+          "project_url": { "type": "string", "format": "uri" },
+          "github_url": { "type": "string", "format": "uri" },
+          "live_demo_url": { "type": "string", "format": "uri" },
+          "features": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "achievements": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "certifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "issuer": { "type": "string" },
+          "issue_date": { "type": "string" },
+          "expiry_date": {
+            "anyOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ]
+          },
+          "credential_id": { "type": "string" },
+          "credential_url": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+
+    "interests": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "hobbies": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "designation": { "type": "string" },
+          "company": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "phone": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -24,7 +24,7 @@ export const runAgent = async (messages, tools) => {
       const { name, arguments: argsStr } = toolCall.function;
       const args = JSON.parse(argsStr);
 
-      console.log("Tool called:", name, args) ;
+      console.log("Tool called:", name, args);
       if (!TOOL_CALLS[name]) throw new Error(`Unknown tool: ${name}`);
 
       const result = await TOOL_CALLS[name](args);
