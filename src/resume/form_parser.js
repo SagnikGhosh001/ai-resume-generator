@@ -1,7 +1,15 @@
 export const parseUserInfo = (formData) => ({
+  fullName: formData.get("full_name") || "",
+  firstName: formData.get("first_name") || "",
+  lastName: formData.get("last_name") || "",
   email: formData.get("email") || "",
   phone: formData.get("phone") || "",
   linkedin: formData.get("linkedin") || "",
+  location: formData.get("location") || "",
+  city: formData.get("city") || "",
+  country: formData.get("country") || "",
+  headline: formData.get("headline") || "",
+  portfolio: formData.get("portfolio") || "",
   workExperience: JSON.parse(formData.get("work_experience") || "[]"),
   education: JSON.parse(formData.get("education") || "[]"),
 });

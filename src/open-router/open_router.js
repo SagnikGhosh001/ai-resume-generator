@@ -1,18 +1,16 @@
-import { OpenRouter } from "@openrouter/sdk";
-
-const openRouter = new OpenRouter({
-  apiKey: Deno.env.get("OPEN_ROUTER_API_KEY"),
-});
-
-export const callOpenRouter = async (messages, tools) => {
-  const res = await openRouter.chat.send({
-    chatGenerationParams: {
-      model: "openrouter/elephant-alpha",
+export const callModel = async (messages, tools) => {
+  const res = await fetch("http://localhost:11434/api/chat", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      model: "qwen3.5:latest",
       messages,
-      tools,
       stream: false,
-    },
+      tools,
+      think: false,
+    }),
   });
 
-  return res.choices[0].message;
+  const data = await res.json();
+  return data.message;
 };

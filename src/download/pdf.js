@@ -1,4 +1,4 @@
-import PDFDocument from "npm:pdfkit";
+import PDFDocument from "pdfkit";
 
 const line = (doc) =>
   doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor("#aaa").stroke()
@@ -33,109 +33,12 @@ const buildPdf = (resume) =>
 
     const info = resume.personal_info || {};
 
-    // Header
-    doc.fontSize(22).font("Helvetica-Bold").fillColor("#1e1b4b")
-      .text(info.full_name || "Resume", { align: "center" });
-
-    if (info.headline) {
-      doc.fontSize(11).font("Helvetica").fillColor("#555")
-        .text(info.headline, { align: "center" });
-    }
-
-    const contacts = [
-      info.email,
-      info.phone,
-      info.links?.linkedin,
-      info.links?.github,
-    ].filter(Boolean);
-    if (contacts.length) {
-      doc.fontSize(9).fillColor("#333")
-        .text(contacts.join("  |  "), { align: "center" });
-    }
-
-    doc.fillColor("#000").fontSize(10).font("Helvetica");
-
-    // Summary
-    if (resume.summary?.professional_summary) {
-      sectionTitle(doc, "Summary");
-      doc.text(resume.summary.professional_summary, { lineGap: 2 });
-    }
-
-    // Work Experience
-    if (resume.work_experience?.length) {
-      sectionTitle(doc, "Work Experience");
-      resume.work_experience.forEach((w) => {
-        const dateStr = w.currently_working
-          ? `${w.start_date || ""} – Present`
-          : `${w.start_date || ""} – ${w.end_date || ""}`;
-
-        doc.font("Helvetica-Bold").text(w.company_name || "", {
-          continued: true,
-        })
-          .font("Helvetica").text(`   ${dateStr}`, { align: "right" });
-        doc.font("Helvetica-Oblique")
-          .text(`${w.job_title || ""}  ·  ${w.employment_type || ""}`);
-        if (w.description) {
-          doc.font("Helvetica").text(w.description, { indent: 10, lineGap: 2 });
-        }
-        doc.moveDown(0.5);
-      });
-    }
-
-    // Education
-    if (resume.education?.length) {
-      sectionTitle(doc, "Education");
-      resume.education.forEach((e) => {
-        doc.font("Helvetica-Bold").text(e.institution_name || "", {
-          continued: true,
-        })
-          .font("Helvetica").text(
-            `   ${e.start_date || ""} – ${e.end_date || ""}`,
-            { align: "right" },
-          );
-        doc.font("Helvetica")
-          .text(
-            `${e.education_level || ""} · ${e.degree || ""} in ${
-              e.field_of_study || ""
-            }`,
-          );
-        doc.moveDown(0.5);
-      });
-    }
-
-    // Skills
-    const skills = resume.skills;
-    if (skills?.technical_skills?.length || skills?.soft_skills?.length) {
-      sectionTitle(doc, "Skills");
-      skills.technical_skills?.forEach((cat) => {
-        doc.font("Helvetica-Bold").text(`${cat.category}: `, {
-          continued: true,
-        })
-          .font("Helvetica").text(
-            cat.skills?.map((s) => s.name).join(", ") || "",
-          );
-      });
-      if (skills.soft_skills?.length) {
-        doc.font("Helvetica-Bold").text("Soft Skills: ", { continued: true })
-          .font("Helvetica").text(skills.soft_skills.join(", "));
-      }
-    }
-
-    // Projects
-    if (resume.projects?.length) {
-      sectionTitle(doc, "Projects");
-      resume.projects.forEach((p) => {
-        doc.font("Helvetica-Bold").text(p.title || "");
-        if (p.description) {
-          doc.font("Helvetica").text(p.description, { indent: 10, lineGap: 2 });
-        }
-        if (p.technologies?.length) {
-          doc.font("Helvetica-Bold").text("Tech: ", { continued: true })
-            .font("Helvetica").text(p.technologies.join(", "));
-        }
-        doc.moveDown(0.5);
-      });
-    }
+    createHeader(doc, info);
+    createSummary(resume, doc);
+    createWork(resume, doc);
+    createEducation(resume, doc);
+    createSkills(resume, doc);
+    createProjects(resume, doc);
 
     doc.end();
   });
@@ -154,4 +57,114 @@ export const generatePdf = async (c) => {
       "Content-Disposition": `attachment; filename="${name}_resume.pdf"`,
     },
   });
+};
+
+const createProjects = (resume, doc) => {
+  if (resume.projects?.length) {
+    sectionTitle(doc, "Projects");
+    resume.projects.forEach((p) => {
+      doc.font("Helvetica-Bold").text(p.title || "");
+      if (p.description) {
+        doc.font("Helvetica").text(p.description, { indent: 10, lineGap: 2 });
+      }
+      if (p.technologies?.length) {
+        doc.font("Helvetica-Bold").text("Tech: ", { continued: true })
+          .font("Helvetica").text(p.technologies.join(", "));
+      }
+      doc.moveDown(0.5);
+    });
+  }
+};
+
+const createSkills = (resume, doc) => {
+  const skills = resume.skills;
+  if (skills?.technical_skills?.length || skills?.soft_skills?.length) {
+    sectionTitle(doc, "Skills");
+    skills.technical_skills?.forEach((cat) => {
+      doc.font("Helvetica-Bold").text(`${cat.category}: `, {
+        continued: true,
+      })
+        .font("Helvetica").text(
+          cat.skills?.map((s) => s.name).join(", ") || "",
+        );
+    });
+    if (skills.soft_skills?.length) {
+      doc.font("Helvetica-Bold").text("Soft Skills: ", { continued: true })
+        .font("Helvetica").text(skills.soft_skills.join(", "));
+    }
+  }
+};
+
+const createEducation = (resume, doc) => {
+  if (resume.education?.length) {
+    sectionTitle(doc, "Education");
+    resume.education.forEach((e) => {
+      doc.font("Helvetica-Bold").text(e.institution_name || "", {
+        continued: true,
+      })
+        .font("Helvetica").text(
+          `   ${e.start_date || ""} – ${e.end_date || ""}`,
+          { align: "right" },
+        );
+      doc.font("Helvetica")
+        .text(
+          `${e.education_level || ""} · ${e.degree || ""} in ${
+            e.field_of_study || ""
+          }`,
+        );
+      doc.moveDown(0.5);
+    });
+  }
+};
+
+const createWork = (resume, doc) => {
+  if (resume.work_experience?.length) {
+    sectionTitle(doc, "Work Experience");
+    resume.work_experience.forEach((w) => {
+      const dateStr = w.currently_working
+        ? `${w.start_date || ""} – Present`
+        : `${w.start_date || ""} – ${w.end_date || ""}`;
+
+      doc.font("Helvetica-Bold").text(w.company_name || "", {
+        continued: true,
+      })
+        .font("Helvetica").text(`   ${dateStr}`, { align: "right" });
+      doc.font("Helvetica-Oblique")
+        .text(`${w.job_title || ""}  ·  ${w.employment_type || ""}`);
+      if (w.description) {
+        doc.font("Helvetica").text(w.description, { indent: 10, lineGap: 2 });
+      }
+      doc.moveDown(0.5);
+    });
+  }
+};
+
+const createSummary = (resume, doc) => {
+  if (resume.summary?.professional_summary) {
+    sectionTitle(doc, "Summary");
+    doc.text(resume.summary.professional_summary, { lineGap: 2 });
+  }
+};
+
+const createHeader = (doc, info) => {
+  doc.fontSize(22).font("Helvetica-Bold").fillColor("#1e1b4b")
+    .text(info.full_name || "Resume", { align: "center" });
+
+  if (info.headline) {
+    doc.fontSize(11).font("Helvetica").fillColor("#555")
+      .text(info.headline, { align: "center" });
+  }
+
+  const contacts = [
+    info.email,
+    info.phone,
+    info.links?.linkedin,
+    info.links?.github,
+  ].filter(Boolean);
+  if (contacts.length) {
+    doc.fontSize(9).fillColor("#333")
+      .text(contacts.join("  |  "), { align: "center" });
+  }
+
+  doc.fillColor("#000").fontSize(10).font("Helvetica");
 };

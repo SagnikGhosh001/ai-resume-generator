@@ -29,9 +29,19 @@ const buildEducationContext = (education) => {
 export const buildUserContext = (userInfo) => {
   const parts = [];
 
+  if (userInfo.fullName) parts.push(`Full Name: ${userInfo.fullName}`);
+  if (userInfo.firstName || userInfo.lastName) {
+    parts.push(`First Name: ${userInfo.firstName || ""}`);
+    parts.push(`Last Name: ${userInfo.lastName || ""}`);
+  }
   if (userInfo.email) parts.push(`Email: ${userInfo.email}`);
   if (userInfo.phone) parts.push(`Phone: ${userInfo.phone}`);
   if (userInfo.linkedin) parts.push(`LinkedIn: ${userInfo.linkedin}`);
+  if (userInfo.location) parts.push(`Location: ${userInfo.location}`);
+  if (userInfo.city) parts.push(`City: ${userInfo.city}`);
+  if (userInfo.country) parts.push(`Country: ${userInfo.country}`);
+  if (userInfo.headline) parts.push(`Headline: ${userInfo.headline}`);
+  if (userInfo.portfolio) parts.push(`Portfolio: ${userInfo.portfolio}`);
   if (userInfo.workExperience.length > 0) {
     parts.push(buildWorkExperienceContext(userInfo.workExperience));
   }
